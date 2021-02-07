@@ -1,8 +1,5 @@
-# ml-code-dataset
-
 Clones the github repositories from [paperswithcode-data](https://github.com/paperswithcode/paperswithcode-data), keeping only `.py`-files and converting any notebooks to scripts.
 
-- [ml-code-dataset](#ml-code-dataset)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -28,8 +25,16 @@ pip install -r requirements.txt
 
 ## Usage
 
+Use the crawler to retrieve a set of github repositories by their topic.
+Create a [personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) and store it in `apikey.txt`.
+View the optional arguments by passing `--help`
+
 ```
-python download.py
+python crawler.py
 ```
 
-The number of repositories to download can be limited by passing the flag `-n` or `--num_repos` followed by the number.
+To clone the repositories listed in the json-file simply run, 
+
+```
+python downloader.py -f <path to json>
+```
