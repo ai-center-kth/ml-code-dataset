@@ -5,6 +5,7 @@ import json
 import shutil
 
 from tqdm import tqdm
+from types import SimpleNamespace
 from argparse import ArgumentParser
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -50,18 +51,21 @@ def start_async_download(repositories):
 if __name__ == "__main__":
 
     parser = ArgumentParser()
+    parser.add_argument("-f", "--file", dest="file", type=str,
+                        help="The json file containing links to repositories to download", required=True)
     parser.add_argument("-n", "--num_repos", dest="num_repositories", type=int,
                         help="The maximum number of repositories to download", required=False)
 
-    # Read repository urls from json file
-    with open('links-between-papers-and-code.json', 'r') as file:
-        repositories = json.load(file)
-
-    # Filter out any eventual non-github repos
-    repositories = list(set([repository['repo_url'] for repository in repositories if (
-        'github.com/' in repository['repo_url'])]))
-
     args = parser.parse_args()
+
+    # Read repository urls from json file
+    with open(args.file, 'r') as file:
+        repositories = json.loads(
+            file.read(), object_hook=lambda d: SimpleNamespace(**d))
+
+    # Filter out any eventual links to non-github repos
+    repositories = list(set([repository.repo_url for repository in repositories if (
+        'github.com/' in repository.repo_url)]))
 
     if args.num_repositories is not None:
         repositories = repositories[:args.num_repositories]
